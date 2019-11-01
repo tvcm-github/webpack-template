@@ -1,2 +1,2 @@
 # webpack-template
-Simple webpack template for pug + scss bem miltipage web apps
+Simple webpack template for pug + scss bem multipage web apps
