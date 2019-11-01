@@ -10,13 +10,20 @@ const PATHS = {
   assets: 'assets/'
 }
 
-const PAGES_DIR = `${PATHS.src}/pages/`
+const PAGES_DIR = {
+  pages: `${PATHS.src}/pages/`,
+  uikit: `${PATHS.src}/uikit/`
+}
 
-// Getting all sub directories of "PAGES_DIR"
-const FOLDERS = fs.readdirSync(PAGES_DIR).map(__dirname => path.join(PAGES_DIR, __dirname))
+function GetPages(dir) {
+  // Getting all sub directories of "dir"
+  var folders = fs.readdirSync(dir).map(__dirname => path.join(dir, __dirname));
 
-// Getting ABSOLUTE pathes to all .pug files of all sub directories
-const PAGES = (FOLDERS.map(folder => fs.readdirSync(folder).filter(fileName => fileName.endsWith('.pug')).map(fileName => path.join(folder, fileName)))).flat();
+  // Getting ABSOLUTE pathes to all .pug files of "folders"
+  var pages = (folders.map(folder => fs.readdirSync(folder).filter(fileName => fileName.endsWith('.pug')).map(fileName => path.join(folder, fileName)))).flat();
+  return pages;
+}
+
 
 module.exports = {
   externals: {
@@ -91,9 +98,13 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: `${PATHS.assets}css/[name].css`,
     }),
-    ...PAGES.map(page => new HtmlWebpackPlugin({
+    ...GetPages(PAGES_DIR.pages).map(page => new HtmlWebpackPlugin({
       template: page,
       filename: `./${path.basename(page).replace(/\.pug/,'.html')}`
+    })),
+    ...GetPages(PAGES_DIR.uikit).map(page => new HtmlWebpackPlugin({
+      template: page,
+      filename: `./uikit/${path.basename(page).replace(/\.pug/,'.html')}`
     })),
     // new CopyWebpackPlugin([
     //   {from: `${PATHS.src}/img`, to: `${PATHS.assets}img` },
