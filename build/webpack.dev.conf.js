@@ -11,6 +11,8 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       warnings: false,
       errors: false
     },
+    open: true,
+    openPage: ['index.html', 'uikit/colors-and-type.html'],
   },
   plugins: [
     new webpack.SourceMapDevToolPlugin({
